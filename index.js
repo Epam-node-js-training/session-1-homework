@@ -3,42 +3,54 @@ url = require('url'),
 http = require('http'),
 path = require('path'),
 ext = require('./extensions.js').ext,
-rootDir = "./root";
+rootDir = "./root",
+appPort = 8080;
 
-console.log(ext);
+var sendServerError = function(err, res) {
+	console.log("Error read file : " + err);
+	res.whriteHead(500);
+	res.end();
+};
 
-var sendFsData = function(res) {
-	return function (err, data) {
+var sendDirectoryContent = function(path, res) {
+	fs.readdir(path, function (err, data) {
 		if(err) {
-			console.log("Error read file : " + err);
-			res.whriteHead(500);
-			res.end();
+			sendServerError(err, res);
 		} else {
-			res.writeHead(200);
-			console.log(data);
-			res.end(data + "");
+			res.writeHead(200, {"Content-Type" : "text/plain charset=utf-8"});
+			res.end(data.join("\n"));
 		}
-	};
+	});
+};
+
+var sendFileContent = function(path, res) {
+	fs.readFile(path, function (err, data) {
+		if(err) {
+			handleServerError(err, res);
+		} else {
+			res.writeHead(200, {"Content-Type" : ext.getContentType(ext.getExt(path))});
+			res.end(data);
+		}
+	});
 };
 
 var handler = function(req, res) {
-	console.log("Path from request : " + url.parse(req.url).pathname);
 	var targetPath = decodeURIComponent(path.normalize(rootDir + "/" + url.parse(req.url).pathname));
 	console.log("Path to search : " + targetPath);
 	fs.exists( targetPath, function (isExist) {
 		if( isExist ) {
 			var stat = fs.lstatSync(targetPath);
 			if(stat.isDirectory()) {
-				fs.readdir( targetPath, sendFsData(res));
+				sendDirectoryContent(targetPath, res);
 			} else if (stat.isFile()) {
-				res.setHeader("Content-Type", ext.getContentType(ext.getExt(targetPath)));
-				fs.readFile(targetPath, 'utf8',sendFsData(res));
+				sendFileContent(targetPath, res);
 			}
 		} else {
 			res.writeHead(404, 'text/html');
-			res.end("Ups... no file of directory found");
+			res.end("Ups... no file or directory found");
 		}
 	} );
 };
 
-http.createServer(handler).listen(8080);
+http.createServer(handler).listen(appPort);
+
