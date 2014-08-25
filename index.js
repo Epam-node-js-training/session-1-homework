@@ -17,7 +17,12 @@ var fileDir = settings.file_dir;
 // Util functions
 function sendNotFoundError(res) {
   res.writeHeader(404, {'Content-Type': 'text/plain'});
-  res.write('Error 404: Resource not found :(');
+  res.write('Error 404: Resource not found :-(');
+  res.end();
+}
+function sendInternalError(res) {
+  res.writeHeader(500, {'Content-Type': 'text/plain'});
+  res.write('Error 500: Internal server error ;-(');
   res.end();
 }
 function sendFile(res, filePath, fileContent) {
@@ -25,27 +30,36 @@ function sendFile(res, filePath, fileContent) {
   res.writeHead(200, {'Content-Type': mimeType});
   res.end(fileContent);
 }
-function sendDirList(res, dirPath) {
+function sendDirList(reqPath, res, dirPath) {
   fs.readdir(dirPath, function(err, files){
     if (err)
-      throw err;
-    fileList = '';
-    for(var i = 0, len = files.length; i < len; i++) {
-      var fileType = mime.lookup(path.basename(files[i]));
-      fileList += files[i] + '\n';
+      sendInternalError(res);
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write('<!DOCTYPE html><html><head><title>' + dirPath + '</title></head>');
+    res.write('<body>');
+    res.write('<ul>');
+    if (reqPath !== '/') {
+      reqPath += '/';
     }
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end(fileList);
+    for(var i = 0, len = files.length; i < len; i++) {
+      var fileName = files[i].replace(fileDir, '');
+      res.write('<li>' + '<a href="' + reqPath + fileName + '">' + fileName + '</a>' + '</li>');
+    }
+    res.write('</ul>');
+    res.write('</body>');
+    res.write('</html>')
+    res.end();
   });
 }
-function serveStatic(res, absPath) {
+function serveStatic(res, reqPath) {
+  var absPath = fileDir + reqPath;
   fs.exists(absPath, function(exists) {
     if (!exists) {
       sendNotFoundError(res);
     } else {
       fs.lstat(absPath, function(err, stats){
         if (err)
-          throw err;
+          sendInternalError(res);
         if (stats.isFile()) {
           fs.readFile(absPath, function(err, data){
             if (err) {
@@ -55,7 +69,7 @@ function serveStatic(res, absPath) {
             }
           });
         } else {
-          sendDirList(res, absPath);
+          sendDirList(reqPath, res, absPath);
         }
       });
     }
@@ -66,8 +80,8 @@ function serveStatic(res, absPath) {
 // Create Http server
 var server = http.createServer(function(req, res){
   var filePath = '';
-  filePath = fileDir + req.url;
-  serveStatic(res, filePath);
+  reqPath = req.url;
+  serveStatic(res, reqPath);
 });
 
 // Start server
