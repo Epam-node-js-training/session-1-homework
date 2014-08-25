@@ -2,6 +2,6 @@
   "name": "session-1-homework",
   "version": "0.0.0",
   "description": "Epam Node.js training homework for session 1",
-  "main": "index.js",
-  "author": "Student Name",
+  "main": "server.js",
+  "author": "Siarhei Startsau (Siarhei_Startsau@epam.com)",
 }
