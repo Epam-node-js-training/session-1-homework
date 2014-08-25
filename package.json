@@ -4,4 +4,8 @@
   "description": "Epam Node.js training homework for session 1",
   "main": "index.js",
   "author": "Vasyl Melnychuk",
+  "dependencies": {
+    "open": "0.0.5",
+    "mime": "1.2.11"
+  }
 }
