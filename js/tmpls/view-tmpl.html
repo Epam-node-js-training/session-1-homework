@@ -1,0 +1,61 @@
+<% _.each( data, function( item, key ){ %>
+
+    <%
+    var d = new Date(item.mtime);
+    
+    var curr_date = d.getDate();
+    curr_date += "";
+    if (curr_date.length == 1) {
+        curr_date = "0" + curr_date;
+    }
+    
+    var curr_month = d.getMonth();
+    curr_month++;
+    curr_month += "";
+    if (curr_month.length == 1) {
+        curr_month = "0" + curr_month;
+    }
+    
+    var curr_year = d.getFullYear();
+    
+    var curr_hour = d.getHours();
+    curr_hour += "";
+    if (curr_hour.length == 1) {
+        curr_hour = "0" + curr_hour;
+    }
+    
+    var curr_min = d.getMinutes();
+    curr_min += "";
+    if (curr_min.length == 1) {
+        curr_min = "0" + curr_min;
+    }
+    
+    var curr_sec = d.getSeconds();
+    curr_sec += "";
+    if (curr_sec.length == 1) {
+        curr_sec = "0" + curr_sec;
+    }
+    
+    item.mtime = curr_date + "." + curr_month + "." + curr_year + " " + curr_hour + ":" + curr_min + ":" + curr_sec; 
+    
+    %>
+
+    <tr <%= key%2!=0 ? "class='alt'" : "" %>>
+        <td>
+            <% if(item.isDirectory){ %>
+                <a class="path" href="#" path="<%=item.path%>">[<%=item.name%>]</a>
+            <% }else{ %>
+                <a target="_blank" href="<%=item.path%>"><%=item.name%></a>
+            <% } %>
+        </td>
+        <td>
+            <%=item.path%>
+        </td>
+        <td>
+            <%=item.size%>
+        </td>
+        <td>
+            <%=item.mtime%>
+        </td>
+    <tr>
+<% }); %>
