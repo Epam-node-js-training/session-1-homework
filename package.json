@@ -1,7 +1,11 @@
 {
   "name": "session-1-homework",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Epam Node.js training homework for session 1",
   "main": "index.js",
-  "author": "Student Name",
+  "author": "Vasyl Melnychuk",
+  "dependencies": {
+    "open": "0.0.5",
+    "mime": "1.2.11"
+  }
 }
