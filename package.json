@@ -1,7 +1,7 @@
 {
-  "name": "session-1-homework",
-  "version": "0.0.0",
-  "description": "Epam Node.js training homework for session 1",
-  "main": "index.js",
-  "author": "Student Name",
+	"name": "proserpina-server",
+	"version": "1.0.0",
+	"description": "Epam Node.js training homework for session 1",
+	"main": "index.js",
+	"author": "Aliaksandr Rykau",
 }
