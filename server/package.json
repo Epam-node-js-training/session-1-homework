@@ -1,0 +1,6 @@
+{
+	"name": "Server package",
+	"description": "A server package that contains all infrastructure logic",
+	"version": "1.0.0",
+	"main": "index.js"
+}
