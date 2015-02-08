@@ -1,7 +1,10 @@
 {
-  "name": "session-1-homework",
+  "name": "FileServer",
   "version": "0.0.0",
   "description": "Epam Node.js training homework for session 1",
   "main": "index.js",
-  "author": "Student Name",
+  "author": "Matyushik Vitaly",
+  "dependencies": {
+    "mime": "^1.3.4"
+  } 
 }
