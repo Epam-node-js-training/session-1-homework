@@ -1,7 +1,11 @@
 {
-  "name": "session-1-homework",
+  "name": "static-file-server",
   "version": "0.0.0",
   "description": "Epam Node.js training homework for session 1",
   "main": "index.js",
-  "author": "Student Name",
+  "author": "Andrei Siarheichyk",
+  "dependencies": {
+    "mime": ">= 1.3.4",
+    "q": ">= 1.1.2"
+  }
 }
