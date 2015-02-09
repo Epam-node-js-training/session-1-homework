@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "Matyushik Vitaly",
   "dependencies": {
-    "mime": "^1.3.4"
-  } 
+    "mime": "^1.3.4",
+    "q": "^1.1.2"
+  }
 }
