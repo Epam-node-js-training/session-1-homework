@@ -4,20 +4,20 @@ var fs = require("fs");
 var mime = require('mime');
 
 function handle(req, rs) {
-	var pathname = "."+url.parse(req.url).pathname;
+	var pathname = "." + url.parse(req.url).pathname;
+	
 	try {
 		var stats = requested(pathname);
 	} catch (ex) {
-		console.log("ex on requested call");
 		handleFileNotFound(rs, pathname);
 		return
 	}
-	console.log(stats.isDirectory() + " isDirectory");
+	
 	if (stats.isDirectory()) {
 		handleDirectory(rs,pathname);
 		return;
 	}
-	console.log(stats.isFile() + " isFile");
+	
 	if (stats.isFile()) {
 		handleFile(rs,pathname);
 		return;
@@ -46,15 +46,11 @@ function handleDirectory(rs,pathname){
 }
 
 function handleFile (rs,pathname){
-	console.log("handling file");
-	console.log("pathname: " + pathname);
 	var mimeType = mime.lookup(pathname);
-	console.log("mime is " + mimeType);
 	
 	fs.readFile(pathname,processFile);
 	function processFile(err, content) {
 		if (err) {
-			console.log(err);
 			handleFileNotFound(rs,pathname);
 			return;
 		}
@@ -65,7 +61,6 @@ function handleFile (rs,pathname){
 }
 
 function handleFileNotFound(rs,pathname){
-	console.log("404:" + pathname);
 	rs.writeHead(404, {"Content-Type": "text/plain"});
     rs.write("Error 404 Path: " + pathname + " not found");
     rs.end();
